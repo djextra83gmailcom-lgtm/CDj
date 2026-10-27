@@ -1,0 +1,23 @@
+# Requires -RunAsAdministrator
+Write-Host "🚀 Running Cslayp setup..." -ForegroundColor Cyan
+# 1. Debloat
+winget uninstall --id "Microsoft.Windows.Widgets_8wekyb3d8bbwe" --silent --accept-source-agreements --accept-package-agreements -EA 0
+"Microsoft.OneDrive","Microsoft.GetHelp","Microsoft.WindowsFeedbackHub","Microsoft.YourPhone","Microsoft.People","Microsoft.BingNews","Microsoft.BingWeather","Microsoft.MicrosoftSolitaireCollection","Microsoft.549981C3F5F10" | ForEach-Object { Get-AppxPackage -Name $_ -AllUsers | Remove-AppxPackage -AllUsers -EA 0; Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like "*$_*" | Remove-AppxProvisionedPackage -Online -EA 0 }
+"HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection","HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" | ForEach-Object { Set-ItemProperty -Path $_ -Name "AllowTelemetry" -Type DWord -Value 0 -EA 0 }
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\SQMClient\Windows" -Name "CEIPEnable" -Type DWord -Value 0 -EA 0
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppCompat" -Name "AITEnable" -Type DWord -Value 0 -EA 0
+"DiagTrack","dmwappushservice","wercon" | ForEach-Object { Stop-Service $_ -EA 0; Set-Service $_ -StartupType Disabled -EA 0 }
+"\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser","\Microsoft\Windows\Application Experience\ProgramDataUpdater","\Microsoft\Windows\Autochk\Proxy","\Microsoft\Windows\Customer Experience Improvement Program\Consolidator" | ForEach-Object { Disable-ScheduledTask -TaskName $_ -EA 0 }
+# 2. Scoop Installation
+Set-ExecutionPolicy RemoteSigned -Scope Process -Force
+if (-not (Get-Command scoop -EA 0)) { iex (irm get.scoop.sh) }
+scoop bucket add extras -EA 0; scoop bucket add nerd-fonts -EA 0
+scoop install git fastfetch yazi fzf starship neovim JetBrainsMono-NF breeze-cursor
+winget install --id Zen-Browser.Zen,Windhawk.Windhawk --scope user -e --silent --accept-source-agreements --accept-package-agreements -EA 0
+# 3. Configs, Windhawk Mods & Profile
+$whMods = "$env:APPDATA\Windhawk\Engine\Mods"; if (-not (Test-Path $whMods)) { New-Item -ItemType Directory -Path $whMods -Force | Out-Null }
+@("alt-tab-delay-remover.whm","per-monitor-alt-tab.whm","taskbar-styler.whm","start-menu-styler.whm") | ForEach-Object { Invoke-WebRequest -Uri "https://raw.githubusercontent.com/djextra83/dotfiles/main/windhawk/$_" -OutFile "$whMods\$_" -EA 0 }
+"UserStyle","Scheme Source" | ForEach-Object { Set-ItemProperty -Path 'HKCU:\Control Panel\Cursors' -Name $_ -Value 1 -EA 0 }
+Set-ItemProperty -Path 'HKCU:\Control Panel\Cursors' -Name '(Default)' -Value 'Breeze' -EA 0
+New-Item -ItemType Directory -Path "$HOME\Documents\PowerShell" -Force | Out-Null
+Write-Host "🎉 Cslayp execution finished successfully!" -ForegroundColor Green
