@@ -1,4 +1,10 @@
 # Requires -RunAsAdministrator
+
+# 1. Auto-enable script execution policy if not allowed
+if ((Get-ExecutionPolicy) -ne 'Bypassed' -and (Get-ExecutionPolicy) -ne 'Unrestricted') {
+    Set-ExecutionPolicy Bypass -Scope Process -Force -EA 0
+}
+
 Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawing
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
