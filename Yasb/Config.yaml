@@ -1,0 +1,29 @@
+bars:
+  - monitor: all
+    alignment: 'top'
+    blur_acrylic: true
+    colors: {}
+    corner_radius: 0
+    height: 32
+    padding:
+      top: 5
+      left: 10
+      bottom: 0
+      right: 10
+    # Structura pe 3 zone: left, center, right
+    widgets:
+      left:
+        - 'yasb:app_menu'      # Iconiță / meniu de sistem
+        - 'glazewm:workspaces' # Workspace-urile active de la GlazeWM
+        - 'time'               # Ceas / timp
+
+      center:
+        - 'active_window'      # Fereastra / aplicația curentă pe care te afli
+
+      right:
+        - 'cpu'                # Utilizare CPU %
+        - 'memory'             # Memorie RAM %
+        - 'battery'            # Baterie
+        - 'wifi'               # Rețea Wi-Fi / Ethernet
+        - 'volume'             # Sunet / Audio
+        - 'systray'            # Tray-ul de sistem (aplicații fundal)
