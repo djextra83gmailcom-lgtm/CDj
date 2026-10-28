@@ -8,59 +8,99 @@ Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawi
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Cslayer / WinToyium v2.0 - Modern Setup & Manager"
-$form.Size = New-Object System.Drawing.Size(760, 480)
+$form.Text = "WinToyium v3.0 - System App Uninstaller & Setup"
+$form.Size = New-Object System.Drawing.Size(860, 560)
 $form.StartPosition = "CenterScreen"
 $form.BackColor = [System.Drawing.Color]::FromArgb(24, 24, 24)
 $form.ForeColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
 $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
 $form.MaximizeBox = $false
 
-# Helper to create checkboxes with modern look
-function Add-Check { param($text, $x, $y, $w=210, $h=24, $checked=$true) $c = New-Object System.Windows.Forms.CheckBox; $c.Text = $text; $c.Location = New-Object System.Drawing.Point($x, $y); $c.Size = New-Object System.Drawing.Size($w, $h); $c.Checked = $checked; $c.ForeColor = [System.Drawing.Color]::White; return $c }
+# Helper to create checkboxes
+function Add-Check { param($text, $x, $y, $w=210, $h=24, $checked=$false) $c = New-Object System.Windows.Forms.CheckBox; $c.Text = $text; $c.Location = New-Object System.Drawing.Point($x, $y); $c.Size = New-Object System.Drawing.Size($w, $h); $c.Checked = $checked; $c.ForeColor = [System.Drawing.Color]::White; return $c }
 
 # Top Control Bar (Preset Selector)
-$lblPreset = New-Object System.Windows.Forms.Label; $lblPreset.Text = "Preset:"; $lblPreset.Location = New-Object System.Drawing.Point(20, 22); $lblPreset.Size = New-Object System.Drawing.Size(55, 20); $form.Controls.Add($lblPreset)
-$cbPreset = New-Object System.Windows.Forms.ComboBox; $cbPreset.Location = New-Object System.Drawing.Point(80, 19); $cbPreset.Size = New-Object System.Drawing.Size(160, 25); $cbPreset.DropDownStyle = "DropDownList"
+$lblPreset = New-Object System.Windows.Forms.Label; $lblPreset.Text = "Preset:"; $lblPreset.Location = New-Object System.Drawing.Point(20, 17); $lblPreset.Size = New-Object System.Drawing.Size(50, 20); $form.Controls.Add($lblPreset)
+$cbPreset = New-Object System.Windows.Forms.ComboBox; $cbPreset.Location = New-Object System.Drawing.Point(75, 14); $cbPreset.Size = New-Object System.Drawing.Size(150, 25); $cbPreset.DropDownStyle = "DropDownList"
 $cbPreset.Items.AddRange(@("Custom", "Debloat", "CDj", "Default")); $cbPreset.SelectedIndex = 2; $form.Controls.Add($cbPreset)
 
-$lblInfo = New-Object System.Windows.Forms.Label; $lblInfo.Text = "Select groups & features horizontally below, then hit Start."; $lblInfo.Location = New-Object System.Drawing.Point(260, 22); $lblInfo.Size = New-Object System.Drawing.Size(460, 20); $lblInfo.ForeColor = [System.Drawing.Color]::DarkGray; $form.Controls.Add($lblInfo)
+$lblInfo = New-Object System.Windows.Forms.Label; $lblInfo.Text = "WinToyium Dashboard — Select features or system apps to uninstall below."; $lblInfo.Location = New-Object System.Drawing.Point(240, 17); $lblInfo.Size = New-Object System.Drawing.Size(590, 20); $lblInfo.ForeColor = [System.Drawing.Color]::DarkGray; $form.Controls.Add($lblInfo)
 
 # Column 1: Debloat & Telemetry (Left)
-$gbDebloat = New-Object System.Windows.Forms.GroupBox; $gbDebloat.Text = "Debloat & Telemetry"; $gbDebloat.Location = New-Object System.Drawing.Point(20, 60); $gbDebloat.Size = New-Object System.Drawing.Size(340, 185); $gbDebloat.ForeColor = [System.Drawing.Color]::Cyan; $form.Controls.Add($gbDebloat)
+$gbDebloat = New-Object System.Windows.Forms.GroupBox; $gbDebloat.Text = "Debloat & Telemetry"; $gbDebloat.Location = New-Object System.Drawing.Point(20, 50); $gbDebloat.Size = New-Object System.Drawing.Size(390, 160); $gbDebloat.ForeColor = [System.Drawing.Color]::Cyan; $form.Controls.Add($gbDebloat)
 $chkWidgets = Add-Check "Widgets" 15 25; $gbDebloat.Controls.Add($chkWidgets)
-$chkOneDrive = Add-Check "OneDrive" 15 55; $gbDebloat.Controls.Add($chkOneDrive)
-$chkBloat = Add-Check "Bloatware Apps & Games" 15 85; $gbDebloat.Controls.Add($chkBloat)
-$chkTelemetry = Add-Check "Telemetry & DiagTrack" 15 115; $gbDebloat.Controls.Add($chkTelemetry)
-$chkTasks = Add-Check "Scheduled Tasks" 15 145; $gbDebloat.Controls.Add($chkTasks)
+$chkOneDrive = Add-Check "OneDrive" 15 50; $gbDebloat.Controls.Add($chkOneDrive)
+$chkBloat = Add-Check "Bloatware Apps & Games" 15 75; $gbDebloat.Controls.Add($chkBloat)
+$chkTelemetry = Add-Check "Telemetry & DiagTrack" 200 25; $gbDebloat.Controls.Add($chkTelemetry)
+$chkTasks = Add-Check "Scheduled Tasks" 200 50; $gbDebloat.Controls.Add($chkTasks)
 
 # Column 2: Apps & Tools (Right)
-$gbApps = New-Object System.Windows.Forms.GroupBox; $gbApps.Text = "Apps & Tools (Install / Configure)"; $gbApps.Location = New-Object System.Drawing.Point(380, 60); $gbApps.Size = New-Object System.Drawing.Size(340, 185); $gbApps.ForeColor = [System.Drawing.Color]::Cyan; $form.Controls.Add($gbApps)
+$gbApps = New-Object System.Windows.Forms.GroupBox; $gbApps.Text = "Apps & Tools (Install / Configure)"; $gbApps.Location = New-Object System.Drawing.Point(430, 50); $gbApps.Size = New-Object System.Drawing.Size(400, 160); $gbApps.ForeColor = [System.Drawing.Color]::Cyan; $form.Controls.Add($gbApps)
 $chkScoop = Add-Check "Scoop CLI (git, neovim, etc)" 15 25; $gbApps.Controls.Add($chkScoop)
-$chkFont = Add-Check "JetBrainsMono-NF & Cursor" 15 55; $gbApps.Controls.Add($chkFont)
-$chkZen = Add-Check "Zen Browser" 15 85; $gbApps.Controls.Add($chkZen)
-$chkWindhawk = Add-Check "Windhawk + GitHub Mods" 15 115; $gbApps.Controls.Add($chkWindhawk)
-$chkPowerShell = Add-Check "PowerShell Profile Dir" 15 145; $gbApps.Controls.Add($chkPowerShell)
+$chkFont = Add-Check "JetBrainsMono-NF & Cursor" 15 50; $gbApps.Controls.Add($chkFont)
+$chkZen = Add-Check "Zen Browser" 15 75; $gbApps.Controls.Add($chkZen)
+$chkWindhawk = Add-Check "Windhawk + GitHub Mods" 200 25; $gbApps.Controls.Add($chkWindhawk)
+$chkPowerShell = Add-Check "PowerShell Profile Dir" 200 50; $gbApps.Controls.Add($chkPowerShell)
 
-# Bottom Row: WinToyium Universal Manager (Full Width Horizontal)
-$gbManager = New-Object System.Windows.Forms.GroupBox; $gbManager.Text = "WinToyium - Universal Uninstall / Delete Manager"; $gbManager.Location = New-Object System.Drawing.Point(20, 255); $gbManager.Size = New-Object System.Drawing.Size(700, 95); $gbManager.ForeColor = [System.Drawing.Color]::Gold; $form.Controls.Add($gbManager)
-$chkForceRemoveAll = Add-Check "Force Uninstall All Selected Bloatware/Apps" 15 28 320 24; $chkForceRemoveAll.ForeColor = [System.Drawing.Color]::OrangeRed; $gbManager.Controls.Add($chkForceRemoveAll)
-$chkCleanDeep = Add-Check "Deep Clean Residual App Folders / Registry" 360 28 320 24; $chkCleanDeep.ForeColor = [System.Drawing.Color]::OrangeRed; $gbManager.Controls.Add($chkCleanDeep)
-$lblManagerHint = New-Object System.Windows.Forms.Label; $lblManagerHint.Text = "Wipes out selected components cleanly and applies deep registry clean."; $lblManagerHint.Location = New-Object System.Drawing.Point(15, 60); $lblManagerHint.Size = New-Object System.Drawing.Size(670, 20); $lblManagerHint.ForeColor = [System.Drawing.Color]::Gray; $gbManager.Controls.Add($lblManagerHint)
+# Column 3: WinToyium Universal System App Uninstaller (Full Width Bottom)
+$gbManager = New-Object System.Windows.Forms.GroupBox; $gbManager.Text = "WinToyium - Universal System App Uninstaller (Edge, Bloat, etc.)"; $gbManager.Location = New-Object System.Drawing.Point(20, 220); $gbManager.Size = New-Object System.Drawing.Size(810, 225); $gbManager.ForeColor = [System.Drawing.Color]::Gold; $form.Controls.Add($gbManager)
+
+$lblMgrDesc = New-Object System.Windows.Forms.Label; $lblMgrDesc.Text = "Check any system app or package below to completely wipe it out:"; $lblMgrDesc.Location = New-Object System.Drawing.Point(15, 20); $lblMgrDesc.Size = New-Object System.Drawing.Size(780, 20); $lblMgrDesc.ForeColor = [System.Drawing.Color]::LightYellow; $gbManager.Controls.Add($lblMgrDesc)
+
+# Scrollable Panel for Dynamic System Apps List
+$panelApps = New-Object System.Windows.Forms.Panel; $panelApps.Location = New-Object System.Drawing.Point(15, 45); $panelApps.Size = New-Object System.Drawing.Size(780, 170); $panelApps.AutoScroll = $true; $gbManager.Controls.Add($panelApps)
+
+$systemAppsList = @(
+    @{ Name = "Microsoft Edge (msedgr / MicrosoftEdge)"; Id = "Microsoft.MicrosoftEdge"; Type = "Appx" },
+    @{ Name = "Microsoft Store"; Id = "Microsoft.WindowsStore"; Type = "Appx" },
+    @{ Name = "Xbox App / Services"; Id = "Microsoft.XboxApp"; Type = "Appx" },
+    @{ Name = "Your Phone / Phone Link"; Id = "Microsoft.YourPhone"; Type = "Appx" },
+    @{ Name = "Get Help"; Id = "Microsoft.GetHelp"; Type = "Appx" },
+    @{ Name = "Feedback Hub"; Id = "Microsoft.WindowsFeedbackHub"; Type = "Appx" },
+    @{ Name = "People"; Id = "Microsoft.People"; Type = "Appx" },
+    @{ Name = "Bing News & Weather"; Id = "Microsoft.BingNews"; Type = "Appx" },
+    @{ Name = "Solitaire Collection"; Id = "Microsoft.MicrosoftSolitaireCollection"; Type = "Appx" },
+    @{ Name = "Cortana"; Id = "Microsoft.549981C3F5F10"; Type = "Appx" },
+    @{ Name = "Camera"; Id = "Microsoft.WindowsCamera"; Type = "Appx" },
+    @{ Name = "Maps"; Id = "Microsoft.WindowsMaps"; Type = "Appx" }
+)
+
+$checkboxesApps = @()
+$yPos = 5
+foreach ($app in $systemAppsList) {
+    $chk = New-Object System.Windows.Forms.CheckBox
+    $chk.Text = "$($app.Name)  [$($app.Id)]"
+    $chk.Location = New-Object System.Drawing.Point(10, $yPos)
+    $chk.Size = New-Object System.Drawing.Size(740, 22)
+    $chk.ForeColor = [System.Drawing.Color]::White
+    $chk.Tag = $app.Id
+    $panelApps.Controls.Add($chk)
+    $checkboxesApps += $chk
+    $yPos += 26
+}
 
 # Preset Switcher Logic
 $cbPreset.Add_SelectedIndexChanged({
     switch ($cbPreset.SelectedItem) {
-        "Debloat" { $chkWidgets.Checked=$true; $chkOneDrive.Checked=$true; $chkBloat.Checked=$true; $chkTelemetry.Checked=$true; $chkTasks.Checked=$true; $chkScoop.Checked=$true; $chkFont.Checked=$true; $chkZen.Checked=$false; $chkWindhawk.Checked=$false; $chkPowerShell.Checked=$true; $chkForceRemoveAll.Checked=$true; $chkCleanDeep.Checked=$false }
-        "CDj"     { $chkWidgets.Checked=$true; $chkOneDrive.Checked=$true; $chkBloat.Checked=$true; $chkTelemetry.Checked=$true; $chkTasks.Checked=$true; $chkScoop.Checked=$true; $chkFont.Checked=$true; $chkZen.Checked=$true; $chkWindhawk.Checked=$true; $chkPowerShell.Checked=$true; $chkForceRemoveAll.Checked=$true; $chkCleanDeep.Checked=$true }
-        "Default" { $chkWidgets.Checked=$true; $chkOneDrive.Checked=$true; $chkBloat.Checked=$true; $chkTelemetry.Checked=$true; $chkTasks.Checked=$true; $chkScoop.Checked=$true; $chkFont.Checked=$true; $chkZen.Checked=$true; $chkWindhawk.Checked=$false; $chkPowerShell.Checked=$true; $chkForceRemoveAll.Checked=$true; $chkCleanDeep.Checked=$false }
+        "Debloat" { 
+            $chkWidgets.Checked=$true; $chkOneDrive.Checked=$true; $chkBloat.Checked=$true; $chkTelemetry.Checked=$true; $chkTasks.Checked=$true; $chkScoop.Checked=$true; $chkFont.Checked=$true; $chkZen.Checked=$false; $chkWindhawk.Checked=$false; $chkPowerShell.Checked=$true 
+            foreach($c in $checkboxesApps){ if($c.Tag -eq "Microsoft.MicrosoftEdge"){$c.Checked=$false} else {$c.Checked=$true} }
+        }
+        "CDj"     { 
+            $chkWidgets.Checked=$true; $chkOneDrive.Checked=$true; $chkBloat.Checked=$true; $chkTelemetry.Checked=$true; $chkTasks.Checked=$true; $chkScoop.Checked=$true; $chkFont.Checked=$true; $chkZen.Checked=$true; $chkWindhawk.Checked=$true; $chkPowerShell.Checked=$true 
+            foreach($c in $checkboxesApps){ $c.Checked=$true }
+        }
+        "Default" { 
+            $chkWidgets.Checked=$true; $chkOneDrive.Checked=$true; $chkBloat.Checked=$true; $chkTelemetry.Checked=$true; $chkTasks.Checked=$true; $chkScoop.Checked=$true; $chkFont.Checked=$true; $chkZen.Checked=$true; $chkWindhawk.Checked=$false; $chkPowerShell.Checked=$true 
+            foreach($c in $checkboxesApps){ if($c.Tag -eq "Microsoft.MicrosoftEdge"){$c.Checked=$false} else {$c.Checked=$true} }
+        }
     }
 })
 
 # Bottom Action Button & Progress Bar
-$btnRun = New-Object System.Windows.Forms.Button; $btnRun.Text = "START SETUP"; $btnRun.Location = New-Object System.Drawing.Point(260, 370); $btnRun.Size = New-Object System.Drawing.Size(220, 45); $btnRun.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204); $btnRun.ForeColor = [System.Drawing.Color]::White; $btnRun.Font = New-Object System.Drawing.Font("SegoeUI", 10, [System.Drawing.FontStyle]::Bold); $form.Controls.Add($btnRun)
+$btnRun = New-Object System.Windows.Forms.Button; $btnRun.Text = "START WINTOYIUM SETUP"; $btnRun.Location = New-Object System.Drawing.Point(300, 460); $btnRun.Size = New-Object System.Drawing.Size(260, 45); $btnRun.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204); $btnRun.ForeColor = [System.Drawing.Color]::White; $btnRun.Font = New-Object System.Drawing.Font("SegoeUI", 9.5, [System.Drawing.FontStyle]::Bold); $form.Controls.Add($btnRun)
 
-$progressBar = New-Object System.Windows.Forms.ProgressBar; $progressBar.Location = New-Object System.Drawing.Point(20, 370); $progressBar.Size = New-Object System.Drawing.Size(700, 25); $progressBar.Style = "Marquee"; $progressBar.Visible = $false; $form.Controls.Add($progressBar)
+$progressBar = New-Object System.Windows.Forms.ProgressBar; $progressBar.Location = New-Object System.Drawing.Point(20, 467); $progressBar.Size = New-Object System.Drawing.Size(810, 25); $progressBar.Style = "Marquee"; $progressBar.Visible = $false; $form.Controls.Add($progressBar)
 
 # Execution Logic
 $btnRun.Add_Click({
@@ -69,14 +109,24 @@ $btnRun.Add_Click({
     
     if ((Get-ExecutionPolicy) -ne 'Bypassed' -and (Get-ExecutionPolicy) -ne 'Unrestricted') { Set-ExecutionPolicy Bypass -Scope Process -Force -EA 0 }
 
-    if ($chkWidgets.Checked -or $chkForceRemoveAll.Checked) { winget uninstall --id "Microsoft.Windows.Widgets_8wekyb3d8bbwe" --silent --accept-source-agreements --accept-package-agreements -EA 0 }
-    if ($chkOneDrive.Checked -or $chkForceRemoveAll.Checked) { "Microsoft.OneDrive" | ForEach-Object { Get-AppxPackage -Name $_ -AllUsers | Remove-AppxPackage -AllUsers -EA 0; Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like "*$_*" | Remove-AppxProvisionedPackage -Online -EA 0 } }
-    if ($chkBloat.Checked -or $chkForceRemoveAll.Checked) { 
+    if ($chkWidgets.Checked) { winget uninstall --id "Microsoft.Windows.Widgets_8wekyb3d8bbwe" --silent --accept-source-agreements --accept-package-agreements -EA 0 }
+    if ($chkOneDrive.Checked) { "Microsoft.OneDrive" | ForEach-Object { Get-AppxPackage -Name $_ -AllUsers | Remove-AppxPackage -AllUsers -EA 0; Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like "*$_*" | Remove-AppxProvisionedPackage -Online -EA 0 } }
+    if ($chkBloat.Checked) { 
         "Microsoft.GetHelp","Microsoft.WindowsFeedbackHub","Microsoft.YourPhone","Microsoft.People","Microsoft.BingNews","Microsoft.BingWeather","Microsoft.MicrosoftSolitaireCollection","Microsoft.549981C3F5F10" | ForEach-Object { 
             Get-AppxPackage -Name $_ -AllUsers | Remove-AppxPackage -AllUsers -EA 0
             Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like "*$_*" | Remove-AppxProvisionedPackage -Online -EA 0 
         } 
     }
+    
+    foreach ($chk in $checkboxesApps) {
+        if ($chk.Checked) {
+            $pkgId = $chk.Tag
+            Get-AppxPackage -Name "*$pkgId*" -AllUsers | Remove-AppxPackage -AllUsers -EA 0
+            Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like "*$pkgId*" | Remove-AppxProvisionedPackage -Online -EA 0
+            winget uninstall --id "$pkgId" --silent --accept-source-agreements --accept-package-agreements -EA 0
+        }
+    }
+
     if ($chkTelemetry.Checked) {
         "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection","HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" | ForEach-Object { Set-ItemProperty -Path $_ -Name "AllowTelemetry" -Type DWord -Value 0 -EA 0 }
         Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\SQMClient\Windows" -Name "CEIPEnable" -Type DWord -Value 0 -EA 0
@@ -118,7 +168,7 @@ $btnRun.Add_Click({
     }
 
     $progressBar.Visible = $false
-    [System.Windows.Forms.MessageBox]::Show("Cslayer & WinToyium setup finished successfully!", "Cslayer", 0, 64)
+    [System.Windows.Forms.MessageBox]::Show("WinToyium setup finished successfully!", "WinToyium", 0, 64)
     $form.FormClosed += { [System.Environment]::Exit(0) }
     $form.Close()
 })
