@@ -9,26 +9,45 @@ Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawi
 
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "WinToyium"
-$form.Size = New-Object System.Drawing.Size(980, 670)
+$form.Size = New-Object System.Drawing.Size(1000, 680)
 $form.StartPosition = "CenterScreen"
-$form.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
+$form.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 18)
 $form.ForeColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
 $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
 $form.MaximizeBox = $false
 
-# --- Material 3 Sidebar Navigation ---
+# Helper function to paint Rounded Panels / Cards (Material 3 style)
+function Set-RoundedPanel {
+    param($panel, $radius=16, $bgColor)
+    $panel.BackColor = $bgColor
+    $panel.Add_Paint({
+        param($sender, $e)
+        $g = $e.Graphics
+        $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+        $rect = New-Object System.Drawing.Rectangle(0, 0, $sender.Width - 1, $sender.Height - 1)
+        $path = New-Object System.Drawing.Drawing2D.GraphicsPath
+        $path.AddArc($rect.X, $rect.Y, $radius, $radius, 180, 90)
+        $path.AddArc($rect.Right - $radius, $rect.Y, $radius, $radius, 270, 90)
+        $path.AddArc($rect.Right - $radius, $rect.Bottom - $radius, $radius, $radius, 0, 90)
+        $path.AddArc($rect.X, $rect.Bottom - $radius, $radius, $radius, 90, 90)
+        $path.CloseFigure()
+        $sender.Region = New-Object System.Drawing.Region($path)
+    })
+}
+
+# --- Material 3 Sidebar (Floating Card Style) ---
 $panelSidebar = New-Object System.Windows.Forms.Panel
-$panelSidebar.Location = New-Object System.Drawing.Point(12, 12)
-$panelSidebar.Size = New-Object System.Drawing.Size(210, 605)
-$panelSidebar.BackColor = [System.Drawing.Color]::FromArgb(24, 24, 24)
+$panelSidebar.Location = New-Object System.Drawing.Point(16, 16)
+$panelSidebar.Size = New-Object System.Drawing.Size(220, 610)
+Set-RoundedPanel $panelSidebar 20 ([System.Drawing.Color]::FromArgb(28, 28, 30))
 $form.Controls.Add($panelSidebar)
 
 $lblBrand = New-Object System.Windows.Forms.Label
 $lblBrand.Text = "WinToyium"
-$lblBrand.Font = New-Object System.Drawing.Font("Segoe UI", 13, [System.Drawing.FontStyle]::Bold)
-$lblBrand.Location = New-Object System.Drawing.Point(20, 24)
-$lblBrand.Size = New-Object System.Drawing.Size(170, 30)
-$lblBrand.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
+$lblBrand.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
+$lblBrand.Location = New-Object System.Drawing.Point(24, 28)
+$lblBrand.Size = New-Object System.Drawing.Size(170, 32)
+$lblBrand.ForeColor = [System.Drawing.Color]::FromArgb(168, 199, 250) # Material You Blue
 $panelSidebar.Controls.Add($lblBrand)
 
 function Add-M3NavButton {
@@ -36,80 +55,80 @@ function Add-M3NavButton {
     $btn = New-Object System.Windows.Forms.Button
     $btn.Text = "   $text"
     $btn.Location = New-Object System.Drawing.Point(12, $y)
-    $btn.Size = New-Object System.Drawing.Size(186, 46)
+    $btn.Size = New-Object System.Drawing.Size(196, 48)
     $btn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btn.FlatAppearance.BorderSize = 0
-    $btn.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::SemiBold)
+    $btn.Font = New-Object System.Drawing.Font("Segoe UI", 10.5, [System.Drawing.FontStyle]::SemiBold)
     $btn.TextAlign = [System.Drawing.ContentAlignment]::MiddleLeft
     $btn.Cursor = [System.Windows.Forms.Cursors]::Hand
     
     if ($selected) {
-        $btn.BackColor = [System.Drawing.Color]::FromArgb(58, 83, 122)
+        $btn.BackColor = [System.Drawing.Color]::FromArgb(58, 83, 122) # M3 Active Pill Container
         $btn.ForeColor = [System.Drawing.Color]::FromArgb(211, 228, 255)
     } else {
-        $btn.BackColor = [System.Drawing.Color]::FromArgb(24, 24, 24)
+        $btn.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 30)
         $btn.ForeColor = [System.Drawing.Color]::FromArgb(196, 199, 197)
     }
     $panelSidebar.Controls.Add($btn)
     return $btn
 }
 
-$btnNavAllInOne  = Add-M3NavButton "⚙️  Install & Uninst" 85 $true
-$btnNavTweaks    = Add-M3NavButton "⚡  System Tweaks" 145
+$btnNavAllInOne  = Add-M3NavButton "⚙️  Install & Uninst" 90 $true
+$btnNavTweaks    = Add-M3NavButton "⚡  System Tweaks" 150
 
 # --- Content Area Container ---
 $panelContent = New-Object System.Windows.Forms.Panel
-$panelContent.Location = New-Object System.Drawing.Point(234, 12)
-$panelContent.Size = New-Object System.Drawing.Size(720, 605)
-$panelContent.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
+$panelContent.Location = New-Object System.Drawing.Point(252, 16)
+$panelContent.Size = New-Object System.Drawing.Size(710, 610)
+$panelContent.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 18)
 $form.Controls.Add($panelContent)
 
 # --- TAB 1: ALL-IN-ONE (Install / Uninstall & Software) ---
 $pnlAllInOne = New-Object System.Windows.Forms.Panel
-$pnlAllInOne.Size = New-Object System.Drawing.Size(720, 550)
+$pnlAllInOne.Size = New-Object System.Drawing.Size(710, 550)
 $pnlAllInOne.Visible = $true
 $panelContent.Controls.Add($pnlAllInOne)
 
-# Horizontal Presets
+# Horizontal Material Presets Buttons (Pill Style)
 $lblProfile = New-Object System.Windows.Forms.Label
 $lblProfile.Text = "Presets:"
 $lblProfile.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $lblProfile.Location = New-Object System.Drawing.Point(5, 8)
 $lblProfile.Size = New-Object System.Drawing.Size(70, 25)
-$lblProfile.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
+$lblProfile.ForeColor = [System.Drawing.Color]::FromArgb(168, 199, 250)
 $pnlAllInOne.Controls.Add($lblProfile)
 
 function Add-M3ProfileBtn {
     param($text, $x)
     $b = New-Object System.Windows.Forms.Button
     $b.Text = $text
-    $b.Location = New-Object System.Drawing.Point($x, 5)
-    $b.Size = New-Object System.Drawing.Size(125, 30)
-    $b.BackColor = [System.Drawing.Color]::FromArgb(43, 44, 48)
+    $b.Location = New-Object System.Drawing.Point($x, 4)
+    $b.Size = New-Object System.Drawing.Size(120, 32)
+    $b.BackColor = [System.Drawing.Color]::FromArgb(44, 46, 49)
     $b.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
     $b.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $b.FlatAppearance.BorderSize = 0
-    $b.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Medium)
+    $b.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Medium)
     $b.Cursor = [System.Windows.Forms.Cursors]::Hand
     $pnlAllInOne.Controls.Add($b)
     return $b
 }
 $btnProfCDj      = Add-M3ProfileBtn "CDj" 80
-$btnProfStandard = Add-M3ProfileBtn "Standard" 215
-$btnProfDebloat  = Add-M3ProfileBtn "Debloat Only" 350
+$btnProfStandard = Add-M3ProfileBtn "Standard" 210
+$btnProfDebloat  = Add-M3ProfileBtn "Debloat Only" 340
 
-# Left Box: System Uninstaller
+# Left Box: System Uninstaller Card
 $gbUninst = New-Object System.Windows.Forms.GroupBox
 $gbUninst.Text = "System Apps Uninstaller"
 $gbUninst.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
 $gbUninst.ForeColor = [System.Drawing.Color]::FromArgb(242, 184, 181)
 $gbUninst.Location = New-Object System.Drawing.Point(5, 45)
-$gbUninst.Size = New-Object System.Drawing.Size(340, 495)
+$gbUninst.Size = New-Object System.Drawing.Size(335, 495)
 $pnlAllInOne.Controls.Add($gbUninst)
 
 $panelApps = New-Object System.Windows.Forms.Panel
 $panelApps.Location = New-Object System.Drawing.Point(10, 25)
-$panelApps.Size = New-Object System.Drawing.Size(320, 460)
+$panelApps.Size = New-Object System.Drawing.Size(315, 460)
 $panelApps.AutoScroll = $true
 $gbUninst.Controls.Add($panelApps)
 
@@ -124,7 +143,7 @@ foreach ($pkg in $installedPackages) {
     $chk.Text = $appName
     $chk.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Regular)
     $chk.Location = New-Object System.Drawing.Point(10, $yPos)
-    $chk.Size = New-Object System.Drawing.Size(295, 24)
+    $chk.Size = New-Object System.Drawing.Size(290, 24)
     $chk.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
     $chk.Tag = $appFullName
     $panelApps.Controls.Add($chk)
@@ -132,12 +151,12 @@ foreach ($pkg in $installedPackages) {
     $yPos += 28
 }
 
-# Right Box: Useful Software & Package Engine
+# Right Box: Useful Software & Package Engine Card
 $gbSoftware = New-Object System.Windows.Forms.GroupBox
 $gbSoftware.Text = "Useful Software & Packages"
 $gbSoftware.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
-$gbSoftware.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
-$gbSoftware.Location = New-Object System.Drawing.Point(355, 45)
+$gbSoftware.ForeColor = [System.Drawing.Color]::FromArgb(168, 199, 250)
+$gbSoftware.Location = New-Object System.Drawing.Point(350, 45)
 $gbSoftware.Size = New-Object System.Drawing.Size(355, 495)
 $pnlAllInOne.Controls.Add($gbSoftware)
 
@@ -199,14 +218,14 @@ $gbSoftware.Controls.Add($lblCustomApp)
 $txtCustomApp = New-Object System.Windows.Forms.TextBox
 $txtCustomApp.Location = New-Object System.Drawing.Point(15, 212)
 $txtCustomApp.Size = New-Object System.Drawing.Size(325, 26)
-$txtCustomApp.BackColor = [System.Drawing.Color]::FromArgb(43, 44, 48)
+$txtCustomApp.BackColor = [System.Drawing.Color]::FromArgb(44, 46, 49)
 $txtCustomApp.ForeColor = [System.Drawing.Color]::White
 $gbSoftware.Controls.Add($txtCustomApp)
 
 $gbCoreDebloat = New-Object System.Windows.Forms.GroupBox
 $gbCoreDebloat.Text = "Core Telemetry & Widgets"
 $gbCoreDebloat.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
-$gbCoreDebloat.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
+$gbCoreDebloat.ForeColor = [System.Drawing.Color]::FromArgb(168, 199, 250)
 $gbCoreDebloat.Location = New-Object System.Drawing.Point(15, 248)
 $gbCoreDebloat.Size = New-Object System.Drawing.Size(325, 235)
 $gbSoftware.Controls.Add($gbCoreDebloat)
@@ -224,14 +243,14 @@ $gbCoreDebloat.Controls.Add($chkTasks)
 
 # --- TAB 2: SYSTEM TWEAKS ---
 $pnlTweaks = New-Object System.Windows.Forms.Panel
-$pnlTweaks.Size = New-Object System.Drawing.Size(720, 550)
+$pnlTweaks.Size = New-Object System.Drawing.Size(710, 550)
 $pnlTweaks.Visible = $false
 $panelContent.Controls.Add($pnlTweaks)
 
 $lblTweaksTitle = New-Object System.Windows.Forms.Label
 $lblTweaksTitle.Text = "Advanced System Tweaks"
 $lblTweaksTitle.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
-$lblTweaksTitle.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
+$lblTweaksTitle.ForeColor = [System.Drawing.Color]::FromArgb(168, 199, 250)
 $lblTweaksTitle.Location = New-Object System.Drawing.Point(5, 10)
 $lblTweaksTitle.Size = New-Object System.Drawing.Size(400, 30)
 $pnlTweaks.Controls.Add($lblTweaksTitle)
@@ -254,7 +273,7 @@ function Set-ActiveNavButton {
             $btn.BackColor = [System.Drawing.Color]::FromArgb(58, 83, 122)
             $btn.ForeColor = [System.Drawing.Color]::FromArgb(211, 228, 255)
         } else {
-            $btn.BackColor = [System.Drawing.Color]::FromArgb(24, 24, 24)
+            $btn.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 30)
             $btn.ForeColor = [System.Drawing.Color]::FromArgb(196, 199, 197)
         }
     }
@@ -286,22 +305,22 @@ $btnProfDebloat.Add_Click({
 })
 
 
-# --- BOTTOM FIXED ACTION BUTTON (START BUTTON) ---
+# --- BOTTOM FLOATING ACTION BUTTON (Material 3 FAB Style) ---
 $btnRun = New-Object System.Windows.Forms.Button
 $btnRun.Text = "APPLY CHANGES & RUN"
 $btnRun.Font = New-Object System.Drawing.Font("Segoe UI", 10.5, [System.Drawing.FontStyle]::Bold)
-$btnRun.Location = New-Object System.Drawing.Point(234, 562)
-$btnRun.Size = New-Object System.Drawing.Size(720, 48)
-$btnRun.BackColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
-$btnRun.ForeColor = [System.Drawing.Color]::FromArgb(28, 41, 62)
+$btnRun.Location = New-Object System.Drawing.Point(252, 572)
+$btnRun.Size = New-Object System.Drawing.Size(710, 48)
+$btnRun.BackColor = [System.Drawing.Color]::FromArgb(168, 199, 250)
+$btnRun.ForeColor = [System.Drawing.Color]::FromArgb(0, 48, 135)
 $btnRun.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
 $btnRun.FlatAppearance.BorderSize = 0
 $btnRun.Cursor = [System.Windows.Forms.Cursors]::Hand
 $form.Controls.Add($btnRun)
 
 $progressBar = New-Object System.Windows.Forms.ProgressBar
-$progressBar.Location = New-Object System.Drawing.Point(234, 562)
-$progressBar.Size = New-Object System.Drawing.Size(720, 48)
+$progressBar.Location = New-Object System.Drawing.Point(252, 572)
+$progressBar.Size = New-Object System.Drawing.Size(710, 48)
 $progressBar.Style = "Marquee"
 $progressBar.Visible = $false
 $form.Controls.Add($progressBar)
