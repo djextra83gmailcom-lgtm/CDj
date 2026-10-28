@@ -142,7 +142,7 @@ keybindings:
 
   # Minimize window
   - commands: ['toggle-minimized']
-    bindings: ['alt+m']
+    bindings: ['alt+x']
 
   # Close focused window (Alt + Q)
   - commands: ['close']
