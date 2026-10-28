@@ -14,7 +14,7 @@ $form.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
 $form.ForeColor = [System.Drawing.Color]::FromArgb(240, 240, 240)$form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
 $form.MaximizeBox =$false
 
-# --- Sidebar Navigation ---
+# --- Panou lateral (Sidebar) ---
 $panelSidebar = New-Object System.Windows.Forms.Panel
 $panelSidebar.Location = New-Object System.Drawing.Point(12, 12)
 $panelSidebar.Size = New-Object System.Drawing.Size(210, 605)$panelSidebar.BackColor = [System.Drawing.Color]::FromArgb(24, 24, 24)
@@ -44,9 +44,9 @@ function Add-NavButton {
     return $btn
 }
 
-$btnNavAllInOne  = Add-NavButton "⚙️  Install & Uninst" 85 $true$btnNavTweaks    = Add-NavButton "⚡  System Tweaks" 145
+$btnNavAllInOne  = Add-NavButton "⚙️  Instalare & Config" 85 $true$btnNavTweaks    = Add-NavButton "⚡  Optimizări Sistem" 145
 
-# --- Content Area Container ---
+# --- Container pentru conținut ---
 $panelContent = New-Object System.Windows.Forms.Panel
 $panelContent.Location = New-Object System.Drawing.Point(234, 12)
 $panelContent.Size = New-Object System.Drawing.Size(720, 605)$panelContent.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
@@ -58,9 +58,9 @@ $pnlAllInOne.Size = New-Object System.Drawing.Size(720, 550)
 $pnlAllInOne.Visible =$true
 $panelContent.Controls.Add($pnlAllInOne)
 
-# Horizontal Presets
+# Etichetă Preseturi
 $lblProfile = New-Object System.Windows.Forms.Label
-$lblProfile.Text = "Presets:"
+$lblProfile.Text = "Preseturi:"
 $lblProfile.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $lblProfile.Location = New-Object System.Drawing.Point(5, 8)
 $lblProfile.Size = New-Object System.Drawing.Size(70, 25)$lblProfile.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
@@ -72,4 +72,79 @@ function Add-ProfileBtn {
     $b.Location = New-Object System.Drawing.Point($x, 5)
     $b.Size = New-Object System.Drawing.Size(125, 30)$b.BackColor = [System.Drawing.Color]::FromArgb(43, 44, 48)
     $b.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)$b.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $b.FlatAppearance.BorderSize = 0$b.Font = New-Object System.Drawing.Font("Segoe UI",
+    $b.FlatAppearance.BorderSize = 0$b.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+    $b.Cursor = [System.Windows.Forms.Cursors]::Hand
+    $pnlAllInOne.Controls.Add($b)
+    return $b
+}
+
+$btnPresetCDj = Add-ProfileBtn "Preset CDj" 80
+
+# Buton Principal de Rulare a Presetului CDj
+$btnRunCDj = New-Object System.Windows.Forms.Button
+$btnRunCDj.Text = "Aplică Presetul CDj & Configurează Totul"
+$btnRunCDj.Location = New-Object System.Drawing.Point(5, 60)$btnRunCDj.Size = New-Object System.Drawing.Size(705, 45)
+$btnRunCDj.BackColor = [System.Drawing.Color]::FromArgb(137, 220, 235)$btnRunCDj.ForeColor = [System.Drawing.Color]::FromArgb(30, 30, 46)
+$btnRunCDj.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat$btnRunCDj.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$btnRunCDj.Cursor = [System.Windows.Forms.Cursors]::Hand
+
+# Logica de aplicare a presetului CDj la apăsarea butonului
+$btnRunCDj.Add_Click({$form.Hide()
+    
+    Write-Host "=== PASUL 1: Curățarea bloatware-ului ===" -ForegroundColor Yellow
+    $bloatware = @(
+        "Microsoft.WebExperiencePack",
+        "Microsoft.GetHelp",
+        "Microsoft.GetStarted",
+        "Microsoft.MicrosoftEdge",
+        "Microsoft.BingSearch",
+        "Microsoft.BingWeather"
+    )
+    foreach ($app in$bloatware) {
+        try {
+            winget uninstall --id $app --silent --accept-source-agreements -ErrorAction SilentlyContinue
+            Write-Host "S-a dezinstalat: $app" -ForegroundColor DarkGray
+        } catch {
+            Write-Host "Nu s-a putut elimina: $app" -ForegroundColor DarkYellow
+        }
+    }
+
+    Write-Host "`n=== PASUL 2: Instalarea aplicațiilor și a managerilor de pachete ===" -ForegroundColor Cyan
+    if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
+        Write-Host "Se instalează Scoop..." -ForegroundColor Yellow
+        Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+        iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
+    }
+
+    $apps = @(
+        "GlazeWM.GlazeWM",
+        "VSCodium.VSCodium",
+        "LocalSend.LocalSend",
+        "ZenTeam.ZenBrowser"
+    )
+    foreach ($app in $apps) {
+        Write-Host "Se instalează $app..." -ForegroundColor DarkCyan
+        try {
+            winget install --id $app --exact --silent --accept-source-agreements --accept-package-agreements
+        } catch {
+            Write-Host "Eroare la instalarea prin winget pentru $app." -ForegroundColor Red
+        }
+    }
+
+    Write-Host "`n=== PASUL 3: Descărcarea setărilor și a dotfiles-urilor de pe GitHub (CDj) ===" -ForegroundColor Green
+    
+    $configDir = "$env:USERPROFILE\.config"
+    if (!(Test-Path $configDir)) {
+        New-Item -ItemType Directory -Path $configDir | Out-Null
+    }
+
+    # Creare directoare locale
+    $folders = @("fastfetch", "cava", "yasb", "glazewm")
+    foreach ($folder in $folders) {$targetPath = Join-Path $configDir$folder
+        if (!(Test-Path $targetPath)) {
+            New-Item -ItemType Directory -Path $targetPath -Force | Out-Null
+        }
+    }
+
+    # Link-uri directoare către fișierele tale RAW de pe GitHub (Repository-ul CDj)
+    $baseUrl = "
