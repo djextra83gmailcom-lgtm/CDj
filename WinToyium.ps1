@@ -10,7 +10,7 @@ Add-Type -AssemblyName System.Drawing
 
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "WinToyium - All-in-One Utility"
-$form.Size = New-Object System.Drawing.Size(980, 670)
+$form.Size = New-Object System.Drawing.Size(1000, 680)
 $form.StartPosition = "CenterScreen"
 $form.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
 $form.ForeColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
@@ -20,15 +20,15 @@ $form.MaximizeBox = $false
 # --- Bara Laterală (Sidebar) ---
 $panelSidebar = New-Object System.Windows.Forms.Panel
 $panelSidebar.Location = New-Object System.Drawing.Point(12, 12)
-$panelSidebar.Size = New-Object System.Drawing.Size(210, 605)
+$panelSidebar.Size = New-Object System.Drawing.Size(210, 620)
 $panelSidebar.BackColor = [System.Drawing.Color]::FromArgb(24, 24, 24)
 $form.Controls.Add($panelSidebar)
 
 $lblBrand = New-Object System.Windows.Forms.Label
 $lblBrand.Text = "WinToyium"
-$lblBrand.Font = New-Object System.Drawing.Font("Segoe UI", 13, [System.Drawing.FontStyle]::Bold)
-$lblBrand.Location = New-Object System.Drawing.Point(20, 24)
-$lblBrand.Size = New-Object System.Drawing.Size(170, 30)
+$lblBrand.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
+$lblBrand.Location = New-Object System.Drawing.Point(20, 20)
+$lblBrand.Size = New-Object System.Drawing.Size(170, 35)
 $lblBrand.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
 $panelSidebar.Controls.Add($lblBrand)
 
@@ -37,7 +37,7 @@ function Add-NavButton {
     $btn = New-Object System.Windows.Forms.Button
     $btn.Text = "   $text"
     $btn.Location = New-Object System.Drawing.Point(12, $y)
-    $btn.Size = New-Object System.Drawing.Size(186, 46)
+    $btn.Size = New-Object System.Drawing.Size(186, 45)
     $btn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btn.FlatAppearance.BorderSize = 0
     $btn.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
@@ -55,28 +55,29 @@ function Add-NavButton {
     return $btn
 }
 
-$btnNavAllInOne  = Add-NavButton "⚙️  Install & Uninst" 85 $true
-$btnNavTweaks    = Add-NavButton "⚡  System Tweaks" 145
+$btnNavAllInOne  = Add-NavButton "⚙️  Install & Uninst" 80 $true
+$btnNavTweaks    = Add-NavButton "⚡  System Tweaks" 135
 
 # --- Container Conținut Principal ---
 $panelContent = New-Object System.Windows.Forms.Panel
 $panelContent.Location = New-Object System.Drawing.Point(234, 12)
-$panelContent.Size = New-Object System.Drawing.Size(720, 605)
+$panelContent.Size = New-Object System.Drawing.Size(735, 620)
 $panelContent.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
 $form.Controls.Add($panelContent)
 
 # --- TAB 1: ALL-IN-ONE ---
 $pnlAllInOne = New-Object System.Windows.Forms.Panel
-$pnlAllInOne.Size = New-Object System.Drawing.Size(720, 550)
+$pnlAllInOne.Location = New-Object System.Drawing.Point(0, 0)
+$pnlAllInOne.Size = New-Object System.Drawing.Size(735, 620)
 $pnlAllInOne.Visible = $true
 $panelContent.Controls.Add($pnlAllInOne)
 
-# Etichetă Preseturi (orizontale)
+# Etichetă Preseturi
 $lblProfile = New-Object System.Windows.Forms.Label
 $lblProfile.Text = "Presets:"
 $lblProfile.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$lblProfile.Location = New-Object System.Drawing.Point(5, 8)
-$lblProfile.Size = New-Object System.Drawing.Size(70, 25)
+$lblProfile.Location = New-Object System.Drawing.Point(10, 15)
+$lblProfile.Size = New-Object System.Drawing.Size(70, 30)
 $lblProfile.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
 $pnlAllInOne.Controls.Add($lblProfile)
 
@@ -84,8 +85,8 @@ function Add-ProfileBtn {
     param($text, $x)
     $b = New-Object System.Windows.Forms.Button
     $b.Text = $text
-    $b.Location = New-Object System.Drawing.Point($x, 5)
-    $b.Size = New-Object System.Drawing.Size(125, 30)
+    $b.Location = New-Object System.Drawing.Point($x, 12)
+    $b.Size = New-Object System.Drawing.Size(130, 32)
     $b.BackColor = [System.Drawing.Color]::FromArgb(43, 44, 48)
     $b.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
     $b.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
@@ -96,14 +97,14 @@ function Add-ProfileBtn {
     return $b
 }
 
-# Generarea butonului pentru preset în zona orizontală
-$btnPresetCustom = Add-ProfileBtn "Preset Personal" 80
+# Butonul depreset amplasat corect pe orizontală
+$btnPresetCustom = Add-ProfileBtn "Preset Personal" 85
 
-# Butonul principal de acțiune
+# Butonul principal de acțiune plasat sub preseturi, cu spațiu generos
 $btnRunAction = New-Object System.Windows.Forms.Button
 $btnRunAction.Text = "Rulează Presetul (Debloat, Scoop/Winget & Configs)"
-$btnRunAction.Location = New-Object System.Drawing.Point(5, 60)
-$btnRunAction.Size = New-Object System.Drawing.Size(705, 45)
+$btnRunAction.Location = New-Object System.Drawing.Point(10, 65)
+$btnRunAction.Size = New-Object System.Drawing.Size(710, 45)
 $btnRunAction.BackColor = [System.Drawing.Color]::FromArgb(137, 220, 235)
 $btnRunAction.ForeColor = [System.Drawing.Color]::FromArgb(30, 30, 46)
 $btnRunAction.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
