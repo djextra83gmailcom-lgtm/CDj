@@ -1,0 +1,21 @@
+* {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: #a1a1a1;
+}
+
+.yasb-bar {
+    background-color: rgba(18, 18, 26, 0.85); /* Fundal închis semi-transparent */
+    border-bottom: 1px solid #2d2d3b;
+}
+
+/* Stil pentru workspace-uri și fereastra activă */
+.active-window {
+    color: #8dbcff;
+    font-weight: bold;
+}
+
+.workspace-btn.active {
+    color: #ffffff;
+    background-color: #3b4252;
+}
