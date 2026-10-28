@@ -8,7 +8,7 @@ Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawi
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "WinToyium"
+$form.Text = "WinToyium - CDj Edition"
 $form.Size = New-Object System.Drawing.Size(980, 670)$form.StartPosition = "CenterScreen"
 $form.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
 $form.ForeColor = [System.Drawing.Color]::FromArgb(240, 240, 240)$form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
@@ -52,7 +52,7 @@ $panelContent.Location = New-Object System.Drawing.Point(234, 12)
 $panelContent.Size = New-Object System.Drawing.Size(720, 605)$panelContent.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
 $form.Controls.Add($panelContent)
 
-# --- TAB 1: ALL-IN-ONE (Install / Uninstall & Software) ---
+# --- TAB 1: ALL-IN-ONE ---
 $pnlAllInOne = New-Object System.Windows.Forms.Panel
 $pnlAllInOne.Size = New-Object System.Drawing.Size(720, 550)
 $pnlAllInOne.Visible =$true
@@ -72,60 +72,4 @@ function Add-ProfileBtn {
     $b.Location = New-Object System.Drawing.Point($x, 5)
     $b.Size = New-Object System.Drawing.Size(125, 30)$b.BackColor = [System.Drawing.Color]::FromArgb(43, 44, 48)
     $b.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)$b.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $b.FlatAppearance.BorderSize = 0$b.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Medium)
-    $b.Cursor = [System.Windows.Forms.Cursors]::Hand
-    $pnlAllInOne.Controls.Add($b)
-    return $b
-}
-$btnProfCDj      = Add-ProfileBtn "CDj" 80
-$btnProfStandard = Add-ProfileBtn "Standard" 215
-$btnProfDebloat  = Add-ProfileBtn "Debloat Only" 350
-
-# Left Box: System Uninstaller
-$gbUninst = New-Object System.Windows.Forms.GroupBox
-$gbUninst.Text = "System Apps Uninstaller"
-$gbUninst.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
-$gbUninst.ForeColor = [System.Drawing.Color]::FromArgb(242, 184, 181)
-$gbUninst.Location = New-Object System.Drawing.Point(5, 45)$gbUninst.Size = New-Object System.Drawing.Size(340, 495)
-$pnlAllInOne.Controls.Add($gbUninst)
-
-$panelApps = New-Object System.Windows.Forms.Panel
-$panelApps.Location = New-Object System.Drawing.Point(10, 25)$panelApps.Size = New-Object System.Drawing.Size(320, 460)
-$panelApps.AutoScroll =$true
-$gbUninst.Controls.Add($panelApps)
-
-$installedPackages = Get-AppxPackage -AllUsers -ErrorAction SilentlyContinue | Select-Object Name, PackageFullName -Unique | Sort-Object Name
-$checkboxesApps = @()$yPos = 10
-foreach ($pkg in$installedPackages) {
-    $appName =$pkg.Name
-    $appFullName =$pkg.PackageFullName
-    
-    $chk = New-Object System.Windows.Forms.CheckBox
-    $chk.Text = $appName$chk.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Regular)
-    $chk.Location = New-Object System.Drawing.Point(10, $yPos)$chk.Size = New-Object System.Drawing.Size(295, 24)
-    $chk.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)$chk.Tag = $appFullName$panelApps.Controls.Add($chk)$checkboxesApps += $chk$yPos += 28
-}
-
-# Right Box: Useful Software & Package Engine
-$gbSoftware = New-Object System.Windows.Forms.GroupBox
-$gbSoftware.Text = "Useful Software & Packages"
-$gbSoftware.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
-$gbSoftware.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
-$gbSoftware.Location = New-Object System.Drawing.Point(355, 45)$gbSoftware.Size = New-Object System.Drawing.Size(355, 495)
-$pnlAllInOne.Controls.Add($gbSoftware)
-
-$lblEngine = New-Object System.Windows.Forms.Label
-$lblEngine.Text = "Engine:"
-$lblEngine.Location = New-Object System.Drawing.Point(15, 25)
-$lblEngine.Size = New-Object System.Drawing.Size(55, 25)$lblEngine.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
-$gbSoftware.Controls.Add($lblEngine)
-
-$comboEngine = New-Object System.Windows.Forms.ComboBox
-$comboEngine.Location = New-Object System.Drawing.Point(75, 22)
-$comboEngine.Size = New-Object System.Drawing.Size(100, 25)$comboEngine.Items.AddRange(@("Winget", "Scoop"))
-$comboEngine.SelectedIndex = 0
-$gbSoftware.Controls.Add($comboEngine)
-
-$chkGit = New-Object System.Windows.Forms.CheckBox
-$chkGit.Text = "Git (Scoop Req)"
-$chkGit.Location = New-Object System.Drawing.Point(190, 23)$chkGit.Size = New-Object System.Drawing.Size
+    $b.FlatAppearance.BorderSize = 0$b.Font = New-Object System.Drawing.Font("Segoe UI",
