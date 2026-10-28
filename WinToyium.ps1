@@ -8,301 +8,311 @@ Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawi
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "WinToyium - Modern Windows Optimizer"
-$form.Size = New-Object System.Drawing.Size(920, 600)
+$form.Text = "WinToyium"
+$form.Size = New-Object System.Drawing.Size(980, 640)
 $form.StartPosition = "CenterScreen"
-$form.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 18)
+$form.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
 $form.ForeColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
 $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
 $form.MaximizeBox = $false
 
-# --- Sidebar Menu (Left) ---
+# --- Material 3 Sidebar Navigation ---
 $panelSidebar = New-Object System.Windows.Forms.Panel
-$panelSidebar.Location = New-Object System.Drawing.Point(0, 0)
-$panelSidebar.Size = New-Object System.Drawing.Size(200, 560)
-$panelSidebar.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28)
+$panelSidebar.Location = New-Object System.Drawing.Point(12, 12)
+$panelSidebar.Size = New-Object System.Drawing.Size(210, 580)
+$panelSidebar.BackColor = [System.Drawing.Color]::FromArgb(24, 24, 24)
 $form.Controls.Add($panelSidebar)
 
 $lblBrand = New-Object System.Windows.Forms.Label
 $lblBrand.Text = "WinToyium"
-$lblBrand.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
-$lblBrand.Location = New-Object System.Drawing.Point(20, 20)
-$lblBrand.Size = New-Object System.Drawing.Size(160, 35)
-$lblBrand.ForeColor = [System.Drawing.Color]::FromArgb(0, 120, 212)
+$lblBrand.Font = New-Object System.Drawing.Font("Segoe UI", 13, [System.Drawing.FontStyle]::Bold)
+$lblBrand.Location = New-Object System.Drawing.Point(20, 24)
+$lblBrand.Size = New-Object System.Drawing.Size(170, 30)
+$lblBrand.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
 $panelSidebar.Controls.Add($lblBrand)
 
-function Add-NavButton {
+function Add-M3NavButton {
     param($text, $y, $selected=$false)
     $btn = New-Object System.Windows.Forms.Button
-    $btn.Text = "  $text"
-    $btn.Location = New-Object System.Drawing.Point(10, $y)
-    $btn.Size = New-Object System.Drawing.Size(180, 42)
+    $btn.Text = "   $text"
+    $btn.Location = New-Object System.Drawing.Point(12, $y)
+    $btn.Size = New-Object System.Drawing.Size(186, 46)
     $btn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $btn.FlatAppearance.BorderSize = 0
-    $btn.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Regular)
+    $btn.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::SemiBold)
     $btn.TextAlign = [System.Drawing.ContentAlignment]::MiddleLeft
+    $btn.Cursor = [System.Windows.Forms.Cursors]::Hand
+    
     if ($selected) {
-        $btn.BackColor = [System.Drawing.Color]::FromArgb(0, 120, 212)
-        $btn.ForeColor = [System.Drawing.Color]::White
+        $btn.BackColor = [System.Drawing.Color]::FromArgb(58, 83, 122)
+        $btn.ForeColor = [System.Drawing.Color]::FromArgb(211, 228, 255)
     } else {
-        $btn.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28)
-        $btn.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
+        $btn.BackColor = [System.Drawing.Color]::FromArgb(24, 24, 24)
+        $btn.ForeColor = [System.Drawing.Color]::FromArgb(196, 199, 197)
     }
     $panelSidebar.Controls.Add($btn)
     return $btn
 }
 
-$btnNavDebloat   = Add-NavButton "📥 Debloat & Install" 80 $true
-$btnNavUninst    = Add-NavButton "🗑️ System Uninstaller" 130
-$btnNavTweaks    = Add-NavButton "⚡ Wintoys Tweaks" 180
+$btnNavAllInOne  = Add-M3NavButton "⚙️  Install & Uninst" 85 $true
+$btnNavTweaks    = Add-M3NavButton "⚡  System Tweaks" 145
 
-# --- Content Panels Container ---
+# --- Content Area Container ---
 $panelContent = New-Object System.Windows.Forms.Panel
-$panelContent.Location = New-Object System.Drawing.Point(210, 15)
-$panelContent.Size = New-Object System.Drawing.Size(680, 520)
-$panelContent.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 18)
+$panelContent.Location = New-Object System.Drawing.Point(234, 12)
+$panelContent.Size = New-Object System.Drawing.Size(720, 580)
+$panelContent.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
 $form.Controls.Add($panelContent)
 
-# --- PANEL 1: DEBLOAT & INSTALLER ---
-$pnlDebloat = New-Object System.Windows.Forms.Panel
-$pnlDebloat.Size = New-Object System.Drawing.Size(680, 520)
-$pnlDebloat.Visible = $true
-$panelContent.Controls.Add($pnlDebloat)
+# --- TAB 1: ALL-IN-ONE (Install / Uninstall & Software) ---
+$pnlAllInOne = New-Object System.Windows.Forms.Panel
+$pnlAllInOne.Size = New-Object System.Drawing.Size(720, 520)
+$pnlAllInOne.Visible = $true
+$panelContent.Controls.Add($pnlAllInOne)
 
+# Horizontal Presets (CTT Style)
 $lblProfile = New-Object System.Windows.Forms.Label
-$lblProfile.Text = "Select Setup Profile:"
-$lblProfile.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
-$lblProfile.Location = New-Object System.Drawing.Point(10, 10)
-$lblProfile.Size = New-Object System.Drawing.Size(200, 25)
-$pnlDebloat.Controls.Add($lblProfile)
+$lblProfile.Text = "Presets:"
+$lblProfile.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$lblProfile.Location = New-Object System.Drawing.Point(5, 8)
+$lblProfile.Size = New-Object System.Drawing.Size(70, 25)
+$lblProfile.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
+$pnlAllInOne.Controls.Add($lblProfile)
 
-function Add-ProfileBtn {
+function Add-M3ProfileBtn {
     param($text, $x)
     $b = New-Object System.Windows.Forms.Button
     $b.Text = $text
-    $b.Location = New-Object System.Drawing.Point($x, 40)
-    $b.Size = New-Object System.Drawing.Size(145, 32)
-    $b.BackColor = [System.Drawing.Color]::FromArgb(45, 45, 45)
-    $b.ForeColor = [System.Drawing.Color]::White
+    $b.Location = New-Object System.Drawing.Point($x, 5)
+    $b.Size = New-Object System.Drawing.Size(125, 30)
+    $b.BackColor = [System.Drawing.Color]::FromArgb(43, 44, 48)
+    $b.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
     $b.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-    $pnlDebloat.Controls.Add($b)
+    $b.FlatAppearance.BorderSize = 0
+    $b.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Medium)
+    $b.Cursor = [System.Windows.Forms.Cursors]::Hand
+    $pnlAllInOne.Controls.Add($b)
     return $b
 }
-$btnProfCDj      = Add-ProfileBtn "CDj" 10
-$btnProfStandard = Add-ProfileBtn "Standard" 165
-$btnProfDebloat  = Add-ProfileBtn "Debloat Only" 320
+$btnProfCDj      = Add-M3ProfileBtn "CDj" 80
+$btnProfStandard = Add-M3ProfileBtn "Standard" 215
+$btnProfDebloat  = Add-M3ProfileBtn "Debloat Only" 350
 
-# Debloat Checkboxes Group
-$gbDBox = New-Object System.Windows.Forms.GroupBox
-$gbDBox.Text = "System Debloat"
-$gbDBox.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$gbDBox.ForeColor = [System.Drawing.Color]::Cyan
-$gbDBox.Location = New-Object System.Drawing.Point(10, 85)
-$gbDBox.Size = New-Object System.Drawing.Size(660, 110)
-$pnlDebloat.Controls.Add($gbDBox)
+# --- SPLIT LAYOUT: Left (System Uninstaller), Right (Installers & Software) ---
 
-function Add-DCheck {
+# Left Box: System Uninstaller (All system apps loaded live)
+$gbUninst = New-Object System.Windows.Forms.GroupBox
+$gbUninst.Text = "System Apps Uninstaller"
+$gbUninst.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
+$gbUninst.ForeColor = [System.Drawing.Color]::FromArgb(242, 184, 181)
+$gbUninst.Location = New-Object System.Drawing.Point(5, 45)
+$gbUninst.Size = New-Object System.Drawing.Size(340, 465)
+$pnlAllInOne.Controls.Add($gbUninst)
+
+$panelApps = New-Object System.Windows.Forms.Panel
+$panelApps.Location = New-Object System.Drawing.Point(10, 25)
+$panelApps.Size = New-Object System.Drawing.Size(320, 430)
+$panelApps.AutoScroll = $true
+$gbUninst.Controls.Add($panelApps)
+
+# Fetching all installed system/Appx packages live
+$installedPackages = Get-AppxPackage -AllUsers -ErrorAction SilentlyContinue | Select-Object Name, PackageFullName -Unique | Sort-Object Name
+$checkboxesApps = @()
+$yPos = 10
+foreach ($pkg in $installedPackages) {
+    $appName = $pkg.Name
+    $appFullName = $pkg.PackageFullName
+    
+    $chk = New-Object System.Windows.Forms.CheckBox
+    $chk.Text = $appName
+    $chk.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Regular)
+    $chk.Location = New-Object System.Drawing.Point(10, $yPos)
+    $chk.Size = New-Object System.Drawing.Size(295, 24)
+    $chk.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
+    $chk.Tag = $appFullName
+    $panelApps.Controls.Add($chk)
+    $checkboxesApps += $chk
+    $yPos += 28
+}
+
+# Right Box: Useful Software & Package Engine
+$gbSoftware = New-Object System.Windows.Forms.GroupBox
+$gbSoftware.Text = "Useful Software & Packages"
+$gbSoftware.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
+$gbSoftware.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
+$gbSoftware.Location = New-Object System.Drawing.Point(355, 45)
+$panelSoftwareSize = New-Object System.Drawing.Size(355, 465)
+$gbSoftware.Size = $panelSoftwareSize
+$pnlAllInOne.Controls.Add($gbSoftware)
+
+$lblEngine = New-Object System.Windows.Forms.Label
+$lblEngine.Text = "Engine:"
+$lblEngine.Location = New-Object System.Drawing.Point(15, 25)
+$lblEngine.Size = New-Object System.Drawing.Size(55, 25)
+$lblEngine.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
+$gbSoftware.Controls.Add($lblEngine)
+
+$comboEngine = New-Object System.Windows.Forms.ComboBox
+$comboEngine.Location = New-Object System.Drawing.Point(75, 22)
+$comboEngine.Size = New-Object System.Drawing.Size(100, 25)
+$comboEngine.Items.AddRange(@("Winget", "Scoop"))
+$comboEngine.SelectedIndex = 0
+$gbSoftware.Controls.Add($comboEngine)
+
+$chkGit = New-Object System.Windows.Forms.CheckBox
+$chkGit.Text = "Git (Scoop Req)"
+$chkGit.Location = New-Object System.Drawing.Point(190, 23)
+$chkGit.Size = New-Object System.Drawing.Size(140, 24)
+$chkGit.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
+$gbSoftware.Controls.Add($chkGit)
+
+function Add-M3Check {
     param($text, $x, $y)
     $c = New-Object System.Windows.Forms.CheckBox
     $c.Text = $text
-    $c.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Regular)
+    $c.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Regular)
     $c.Location = New-Object System.Drawing.Point($x, $y)
-    $c.Size = New-Object System.Drawing.Size(220, 25)
-    $c.ForeColor = [System.Drawing.Color]::White
-    $c.Checked = $true
+    $c.Size = New-Object System.Drawing.Size(155, 24)
+    $c.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
     return $c
 }
-$chkWidgets  = Add-DCheck "Remove Widgets" 15 25
-$chkOneDrive = Add-DCheck "Remove OneDrive" 15 55
-$chkBloat    = Add-DCheck "Remove Xbox and Games" 15 80
-$chkTelemetry= Add-DCheck "Disable Telemetry" 340 25
-$chkTasks    = Add-DCheck "Disable Tracking Tasks" 340 55
 
-$gbDBox.Controls.Add($chkWidgets)
-$gbDBox.Controls.Add($chkOneDrive)
-$gbDBox.Controls.Add($chkBloat)
-$gbDBox.Controls.Add($chkTelemetry)
-$gbDBox.Controls.Add($chkTasks)
+$chkWindhawk = Add-M3Check "Windhawk" 15 65
+$chkYASB     = Add-M3Check "YASB Bar" 185 65
+$chkGlazeWM  = Add-M3Check "GlazeWM" 15 95
+$chkYazi     = Add-M3Check "Yazi Terminal" 185 95
+$chkFzf      = Add-M3Check "fzf Search" 15 125
+$chkLocalSend= Add-M3Check "LocalSend" 185 125
+$chkZen      = Add-M3Check "Zen Browser" 15 155
 
-# App Installer Group
-$gbInstall = New-Object System.Windows.Forms.GroupBox
-$gbInstall.Text = "App Installer and Package Manager"
-$gbInstall.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$gbInstall.ForeColor = [System.Drawing.Color]::Cyan
-$gbInstall.Location = New-Object System.Drawing.Point(10, 205)
-$gbInstall.Size = New-Object System.Drawing.Size(660, 225)
-$pnlDebloat.Controls.Add($gbInstall)
-
-$lblMgr = New-Object System.Windows.Forms.Label
-$lblMgr.Text = "Package Engine:"
-$lblMgr.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Regular)
-$lblMgr.Location = New-Object System.Drawing.Point(15, 28)
-$lblMgr.Size = New-Object System.Drawing.Size(120, 25)
-$lblMgr.ForeColor = [System.Drawing.Color]::White
-$gbInstall.Controls.Add($lblMgr)
-
-$comboEngine = New-Object System.Windows.Forms.ComboBox
-$comboEngine.Location = New-Object System.Drawing.Point(140, 25)
-$comboEngine.Size = New-Object System.Drawing.Size(140, 25)
-$comboEngine.Items.AddRange(@("Winget", "Scoop"))
-$comboEngine.SelectedIndex = 0
-$gbInstall.Controls.Add($comboEngine)
-
-$chkGit = Add-DCheck "Install Git" 320 25
-$gbInstall.Controls.Add($chkGit)
-
-$chkLocalSend = Add-DCheck "Install LocalSend" 15 65
-$gbInstall.Controls.Add($chkLocalSend)
-
-$chkZen = Add-DCheck "Install Zen Browser" 230 65
-$gbInstall.Controls.Add($chkZen)
-
-$chkWindhawk = Add-DCheck "Install Windhawk" 440 65
-$gbInstall.Controls.Add($chkWindhawk)
+$gbSoftware.Controls.Add($chkWindhawk)
+$gbSoftware.Controls.Add($chkYASB)
+$gbSoftware.Controls.Add($chkGlazeWM)
+$gbSoftware.Controls.Add($chkYazi)
+$gbSoftware.Controls.Add($chkFzf)
+$gbSoftware.Controls.Add($chkLocalSend)
+$gbSoftware.Controls.Add($chkZen)
 
 $lblCustomApp = New-Object System.Windows.Forms.Label
-$lblCustomApp.Text = "Install custom package by Name or ID:"
-$lblCustomApp.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Regular)
-$lblCustomApp.Location = New-Object System.Drawing.Point(15, 110)
-$lblCustomApp.Size = New-Object System.Drawing.Size(300, 25)
-$lblCustomApp.ForeColor = [System.Drawing.Color]::White
-$gbInstall.Controls.Add($lblCustomApp)
+$lblCustomApp.Text = "Custom Package Name or ID:"
+$lblCustomApp.Location = New-Object System.Drawing.Point(15, 195)
+$lblCustomApp.Size = New-Object System.Drawing.Size(320, 20)
+$lblCustomApp.ForeColor = [System.Drawing.Color]::FromArgb(227, 227, 225)
+$gbSoftware.Controls.Add($lblCustomApp)
 
 $txtCustomApp = New-Object System.Windows.Forms.TextBox
-$txtCustomApp.Location = New-Object System.Drawing.Point(15, 140)
-$txtCustomApp.Size = New-Object System.Drawing.Size(630, 28)
-$txtCustomApp.BackColor = [System.Drawing.Color]::FromArgb(40, 40, 40)
+$txtCustomApp.Location = New-Object System.Drawing.Point(15, 220)
+$txtCustomApp.Size = New-Object System.Drawing.Size(325, 26)
+$txtCustomApp.BackColor = [System.Drawing.Color]::FromArgb(43, 44, 48)
 $txtCustomApp.ForeColor = [System.Drawing.Color]::White
-$txtCustomApp.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Regular)
-$gbInstall.Controls.Add($txtCustomApp)
+$gbSoftware.Controls.Add($txtCustomApp)
 
-# --- PANEL 2: SYSTEM UNINSTALLER ---
-$pnlUninst = New-Object System.Windows.Forms.Panel
-$pnlUninst.Size = New-Object System.Drawing.Size(680, 520)
-$pnlUninst.Visible = $false
-$panelContent.Controls.Add($pnlUninst)
+# Additional standard debloat options inside the right panel bottom
+$gbCoreDebloat = New-Object System.Windows.Forms.GroupBox
+$gbCoreDebloat.Text = "Core Telemetry & Widgets"
+$gbCoreDebloat.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$gbCoreDebloat.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
+$gbCoreDebloat.Location = New-Object System.Drawing.Point(15, 255)
+$gbCoreDebloat.Size = New-Object System.Drawing.Size(325, 195)
+$gbSoftware.Controls.Add($gbCoreDebloat)
 
-$lblUninstTitle = New-Object System.Windows.Forms.Label
-$lblUninstTitle.Text = "Universal System App Uninstaller"
-$lblUninstTitle.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
-$lblUninstTitle.ForeColor = [System.Drawing.Color]::Gold
-$lblUninstTitle.Location = New-Object System.Drawing.Point(10, 10)
-$lblUninstTitle.Size = New-Object System.Drawing.Size(400, 30)
-$pnlUninst.Controls.Add($lblUninstTitle)
+$chkWidgets  = Add-M3Check "Remove Widgets" 15 25
+$chkOneDrive = Add-M3Check "Remove OneDrive" 15 55
+$chkTelemetry= Add-M3Check "Disable Telemetry" 15 85
+$chkTasks    = Add-M3Check "Disable Tasks" 15 115
 
-$panelApps = New-Object System.Windows.Forms.Panel
-$panelApps.Location = New-Object System.Drawing.Point(10, 50)
-$panelApps.Size = New-Object System.Drawing.Size(660, 400)
-$panelApps.AutoScroll = $true
-$pnlUninst.Controls.Add($panelApps)
+$gbCoreDebloat.Controls.Add($chkWidgets)
+$gbCoreDebloat.Controls.Add($chkOneDrive)
+$gbCoreDebloat.Controls.Add($chkTelemetry)
+$gbCoreDebloat.Controls.Add($chkTasks)
 
-$systemAppsList = @(
-    @{ Name = "Microsoft Edge"; Id = "Microsoft.MicrosoftEdge" },
-    @{ Name = "Microsoft Store"; Id = "Microsoft.WindowsStore" },
-    @{ Name = "Xbox Services"; Id = "Microsoft.XboxApp" },
-    @{ Name = "Phone Link"; Id = "Microsoft.YourPhone" },
-    @{ Name = "Get Help"; Id = "Microsoft.GetHelp" },
-    @{ Name = "Feedback Hub"; Id = "Microsoft.WindowsFeedbackHub" },
-    @{ Name = "People App"; Id = "Microsoft.People" },
-    @{ Name = "Bing News and Weather"; Id = "Microsoft.BingNews" },
-    @{ Name = "Solitaire Collection"; Id = "Microsoft.MicrosoftSolitaireCollection" },
-    @{ Name = "Camera App"; Id = "Microsoft.WindowsCamera" },
-    @{ Name = "Maps App"; Id = "Microsoft.WindowsMaps" }
-)
 
-$checkboxesApps = @()
-$yPos = 10
-foreach ($app in $systemAppsList) {
-    $chk = New-Object System.Windows.Forms.CheckBox
-    $chk.Text = "$($app.Name)  [$($app.Id)]"
-    $chk.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Regular)
-    $chk.Location = New-Object System.Drawing.Point(15, $yPos)
-    $chk.Size = New-Object System.Drawing.Size(600, 25)
-    $chk.ForeColor = [System.Drawing.Color]::White
-    $chk.Tag = $app.Id
-    $panelApps.Controls.Add($chk)
-    $checkboxesApps += $chk
-    $yPos += 30
-}
-
-# --- PANEL 3: WINTOYS TWEAKS ---
+# --- TAB 2: SYSTEM TWEAKS ---
 $pnlTweaks = New-Object System.Windows.Forms.Panel
-$pnlTweaks.Size = New-Object System.Drawing.Size(680, 520)
+$pnlTweaks.Size = New-Object System.Drawing.Size(720, 520)
 $pnlTweaks.Visible = $false
 $panelContent.Controls.Add($pnlTweaks)
 
 $lblTweaksTitle = New-Object System.Windows.Forms.Label
-$lblTweaksTitle.Text = "Wintoys Power Tweaks and Performance"
+$lblTweaksTitle.Text = "Advanced System Tweaks"
 $lblTweaksTitle.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
-$lblTweaksTitle.ForeColor = [System.Drawing.Color]::Gold
-$lblTweaksTitle.Location = New-Object System.Drawing.Point(10, 10)
+$lblTweaksTitle.ForeColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
+$lblTweaksTitle.Location = New-Object System.Drawing.Point(5, 10)
 $lblTweaksTitle.Size = New-Object System.Drawing.Size(400, 30)
 $pnlTweaks.Controls.Add($lblTweaksTitle)
 
-$chkGameMode = Add-DCheck "Enable Ultimate Performance" 15 60
-$chkAccel    = Add-DCheck "Disable Mouse Acceleration" 15 100
-$chkFastBoot = Add-DCheck "Optimize Network Throttling" 15 140
-$chkDarkTheme= Add-DCheck "Force System Dark Mode" 15 180
+$chkGameMode = Add-M3Check "Enable Ultimate Performance" 15 60
+$chkAccel    = Add-M3Check "Disable Mouse Acceleration" 15 100
+$chkFastBoot = Add-M3Check "Optimize Network Throttling" 15 140
+$chkDarkTheme= Add-M3Check "Force System Dark Mode" 15 180
 $pnlTweaks.Controls.Add($chkGameMode)
 $pnlTweaks.Controls.Add($chkAccel)
 $pnlTweaks.Controls.Add($chkFastBoot)
 $pnlTweaks.Controls.Add($chkDarkTheme)
 
-# --- Navigation Switch Logic ---
-$btnNavDebloat.Add_Click({
-    $pnlDebloat.Visible = $true; $pnlUninst.Visible = $false; $pnlTweaks.Visible = $false
-    $btnNavDebloat.BackColor = [System.Drawing.Color]::FromArgb(0, 120, 212); $btnNavDebloat.ForeColor = [System.Drawing.Color]::White
-    $btnNavUninst.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28); $btnNavUninst.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
-    $btnNavTweaks.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28); $btnNavTweaks.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
-})
 
-$btnNavUninst.Add_Click({
-    $pnlDebloat.Visible = $false; $pnlUninst.Visible = $true; $pnlTweaks.Visible = $false
-    $btnNavUninst.BackColor = [System.Drawing.Color]::FromArgb(0, 120, 212); $btnNavUninst.ForeColor = [System.Drawing.Color]::White
-    $btnNavDebloat.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28); $btnNavDebloat.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
-    $btnNavTweaks.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28); $btnNavTweaks.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
+# --- Navigation Events ---
+function Set-ActiveNavButton {
+    param($activeBtn)
+    foreach ($btn in @($btnNavAllInOne, $btnNavTweaks)) {
+        if ($btn -eq $activeBtn) {
+            $btn.BackColor = [System.Drawing.Color]::FromArgb(58, 83, 122)
+            $btn.ForeColor = [System.Drawing.Color]::FromArgb(211, 228, 255)
+        } else {
+            $btn.BackColor = [System.Drawing.Color]::FromArgb(24, 24, 24)
+            $btn.ForeColor = [System.Drawing.Color]::FromArgb(196, 199, 197)
+        }
+    }
+}
+
+$btnNavAllInOne.Add_Click({
+    $pnlAllInOne.Visible = $true; $pnlTweaks.Visible = $false
+    Set-ActiveNavButton $btnNavAllInOne
 })
 
 $btnNavTweaks.Add_Click({
-    $pnlDebloat.Visible = $false; $pnlUninst.Visible = $false; $pnlTweaks.Visible = $true
-    $btnNavTweaks.BackColor = [System.Drawing.Color]::FromArgb(0, 120, 212); $btnNavTweaks.ForeColor = [System.Drawing.Color]::White
-    $btnNavDebloat.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28); $btnNavDebloat.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
-    $btnNavUninst.BackColor = [System.Drawing.Color]::FromArgb(28, 28, 28); $btnNavUninst.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
+    $pnlAllInOne.Visible = $false; $pnlTweaks.Visible = $true
+    Set-ActiveNavButton $btnNavTweaks
 })
 
-# Profile Presets Logic (CDj, Standard, Debloat Only)
+# Preset logic
 $btnProfCDj.Add_Click({
-    $chkWidgets.Checked = $true; $chkOneDrive.Checked = $true; $chkBloat.Checked = $true; $chkTelemetry.Checked = $true; $chkTasks.Checked = $true
-    $chkGit.Checked = $true; $chkLocalSend.Checked = $true; $chkZen.Checked = $true; $chkWindhawk.Checked = $true
+    $chkWidgets.Checked = $true; $chkOneDrive.Checked = $true; $chkTelemetry.Checked = $true; $chkTasks.Checked = $true
+    $chkGit.Checked = $true; $chkWindhawk.Checked = $true; $chkYASB.Checked = $true; $chkGlazeWM.Checked = $true
+    $chkYazi.Checked = $true; $chkFzf.Checked = $true; $chkLocalSend.Checked = $true; $chkZen.Checked = $true
 })
 $btnProfStandard.Add_Click({
-    $chkWidgets.Checked = $true; $chkOneDrive.Checked = $true; $chkBloat.Checked = $true; $chkTelemetry.Checked = $true; $chkTasks.Checked = $true
-    $chkGit.Checked = $true; $chkZen.Checked = $true; $chkLocalSend.Checked = $false; $chkWindhawk.Checked = $false
+    $chkWidgets.Checked = $true; $chkOneDrive.Checked = $true; $chkTelemetry.Checked = $true; $chkTasks.Checked = $true
+    $chkGit.Checked = $true; $chkZen.Checked = $true; $chkLocalSend.Checked = $true
 })
 $btnProfDebloat.Add_Click({
-    $chkWidgets.Checked = $true; $chkOneDrive.Checked = $true; $chkBloat.Checked = $true; $chkTelemetry.Checked = $true; $chkTasks.Checked = $true
-    $chkGit.Checked = $false; $chkLocalSend.Checked = $false; $chkZen.Checked = $false; $chkWindhawk.Checked = $false
+    $chkWidgets.Checked = $true; $chkOneDrive.Checked = $true; $chkTelemetry.Checked = $true; $chkTasks.Checked = $true
+    $chkGit.Checked = $false; $chkWindhawk.Checked = $false; $chkYASB.Checked = $false; $chkGlazeWM.Checked = $false
 })
 
-# --- Bottom Execute Button & Progress Bar ---
+
+# --- Bottom Action Button & Progress Bar ---
 $btnRun = New-Object System.Windows.Forms.Button
-$btnRun.Text = "APPLY SELECTED CHANGES"
+$btnRun.Text = "APPLY CHANGES & RUN"
 $btnRun.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$btnRun.Location = New-Object System.Drawing.Point(210, 500)
-$btnRun.Size = New-Object System.Drawing.Size(680, 42)
-$btnRun.BackColor = [System.Drawing.Color]::FromArgb(0, 120, 212)
-$btnRun.ForeColor = [System.Drawing.Color]::White
+$btnRun.Location = New-Object System.Drawing.Point(234, 522)
+$btnRun.Size = New-Object System.Drawing.Size(720, 44)
+$btnRun.BackColor = [System.Drawing.Color]::FromArgb(138, 180, 248)
+$btnRun.ForeColor = [System.Drawing.Color]::FromArgb(28, 41, 62)
 $btnRun.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+$btnRun.FlatAppearance.BorderSize = 0
+$btnRun.Cursor = [System.Windows.Forms.Cursors]::Hand
 $form.Controls.Add($btnRun)
 
 $progressBar = New-Object System.Windows.Forms.ProgressBar
-$progressBar.Location = New-Object System.Drawing.Point(210, 500)
-$progressBar.Size = New-Object System.Drawing.Size(680, 42)
+$progressBar.Location = New-Object System.Drawing.Point(234, 522)
+$progressBar.Size = New-Object System.Drawing.Size(720, 44)
 $progressBar.Style = "Marquee"
 $progressBar.Visible = $false
 $form.Controls.Add($progressBar)
 
-# --- Execution Script Handler ---
+
+# --- Execution Handler ---
 $btnRun.Add_Click({
     $btnRun.Visible = $false
     $progressBar.Visible = $true
@@ -311,31 +321,31 @@ $btnRun.Add_Click({
         Set-ExecutionPolicy Bypass -Scope Process -Force -EA 0 
     }
 
-    if ($chkWidgets.Checked) { winget uninstall --id "Microsoft.Windows.Widgets_8wekyb3d8bbwe" --silent --accept-source-agreements --accept-package-agreements -EA 0 }
-    if ($chkOneDrive.Checked) { "Microsoft.OneDrive" | ForEach-Object { Get-AppxPackage -Name $_ -AllUsers | Remove-AppxPackage -AllUsers -EA 0 } }
-    if ($chkBloat.Checked) { 
-        "Microsoft.XboxApp","Microsoft.BingNews","Microsoft.MicrosoftSolitaireCollection" | ForEach-Object { 
-            Get-AppxPackage -Name $_ -AllUsers | Remove-AppxPackage -AllUsers -EA 0 
-        } 
+    # Uninstall checked system packages
+    foreach ($chk in $checkboxesApps) {
+        if ($chk.Checked) {
+            $fullPkg = $chk.Tag
+            Remove-AppxPackage -Package $fullPkg -AllUsers -ErrorAction SilentlyContinue
+            Remove-AppxProvisionedPackage -Online -PackageName $fullPkg -ErrorAction SilentlyContinue
+        }
     }
+
+    if ($chkWidgets.Checked) { winget uninstall --id "Microsoft.Windows.Widgets_8wekyb3d8bbwe" --silent --accept-source-agreements -EA 0 }
+    if ($chkOneDrive.Checked) { "Microsoft.OneDrive" | ForEach-Object { Get-AppxPackage -Name $_ -AllUsers | Remove-AppxPackage -AllUsers -EA 0 } }
     if ($chkTelemetry.Checked) {
         Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0 -EA 0
     }
 
-    foreach ($chk in $checkboxesApps) {
-        if ($chk.Checked) {
-            $pkgId = $chk.Tag
-            Get-AppxPackage -Name "*$pkgId*" -AllUsers | Remove-AppxPackage -AllUsers -EA 0
-            winget uninstall --id "$pkgId" --silent --accept-source-agreements --accept-package-agreements -EA 0
-        }
-    }
-
     $engine = $comboEngine.SelectedItem
     $appsToInstall = @()
-    if ($chkLocalSend.Checked) { $appsToInstall += "LocalSend.LocalSend" }
-    if ($chkZen.Checked) { $appsToInstall += "Zen-Browser.Zen" }
     if ($chkWindhawk.Checked) { $appsToInstall += "Windhawk.Windhawk" }
-    
+    if ($chkYASB.Checked)     { $appsToInstall += "yasb" }
+    if ($chkGlazeWM.Checked)  { $appsToInstall += "GlazeWM.GlazeWM" }
+    if ($chkYazi.Checked)     { $appsToInstall += "sxyazi.yazi" }
+    if ($chkFzf.Checked)      { $appsToInstall += "junegunn.fzf" }
+    if ($chkLocalSend.Checked){ $appsToInstall += "LocalSend.LocalSend" }
+    if ($chkZen.Checked)      { $appsToInstall += "Zen-Browser.Zen" }
+
     if ($txtCustomApp.Text.Trim() -ne "") {
         $appsToInstall += $txtCustomApp.Text.Trim()
     }
@@ -349,13 +359,14 @@ $btnRun.Add_Click({
         if (-not (Get-Command scoop -EA 0)) { iex (irm get.scoop.sh) }
         if ($chkGit.Checked) { scoop install git -EA 0 }
         scoop bucket add extras -EA 0
+        scoop bucket add nerd-fonts -EA 0
         foreach ($app in $appsToInstall) {
             scoop install $app -EA 0
         }
     }
 
     $progressBar.Visible = $false
-    [System.Windows.Forms.MessageBox]::Show("WinToyium optimization and installation completed successfully!", "WinToyium", 0, 64)
+    [System.Windows.Forms.MessageBox]::Show("WinToyium Material 3 execution finished successfully!", "WinToyium", 0, 64)
     $form.FormClosed += { [System.Environment]::Exit(0) }
     $form.Close()
 })
