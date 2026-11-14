@@ -1,0 +1,8 @@
+{
+	    "Tab": "CommandMode",
+	        "Alt-s": "Save",
+	       "Alt-d": "CutLine",
+       	  "Alt-z": "Redo",
+	     "Alt-f": "Find"   
+	        }
+	        
