@@ -1,0 +1,174 @@
+/* ==UserStyle==
+@name           Google Search - Catppuccin Mocha (NixOS Rice)
+@namespace      ://github.com
+@version        1.1.0
+@description    Catppuccin Mocha TUI theme with Nerd Fonts and NixOS prompt for Google Search
+==/UserStyle== */
+
+:root {
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
+  --ctp-surface0: #313244;
+  --ctp-surface1: #45475a;
+  --ctp-overlay0: #6c7086;
+  --ctp-subtext0: #a6adc8;
+  --ctp-text: #cdd6f4;
+  --ctp-mauve: #cba6f7;
+  --ctp-blue: #89b4fa;
+  --ctp-sapphire: #74c7ec;
+  --ctp-lavender: #b4befe;
+  --ctp-green: #a6e3a1;
+  --ctp-peach: #fab387;
+}
+
+/* Global Nerd Font (preserves Google's built-in Material Icons) */
+*:not([class*="material-icons"]):not([class*="google-symbols"]):not(svg):not(path) {
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+}
+
+/* Main Backgrounds */
+html, body, #main, #cnt, #rcnt, #center_col, #rhs, .sfbg, .minidiv .sfbg, .appbar, #hdtb, .T3F3Ge {
+  background-color: var(--ctp-base) !important;
+  color: var(--ctp-text) !important;
+}
+
+/* Top Bar & Footer */
+#searchform, .CvDJxb, #fbar, .fbar, .c93Gbe {
+  background-color: var(--ctp-mantle) !important;
+  border-color: var(--ctp-surface0) !important;
+}
+
+/* Replace Homepage Google Logo with Minimal NixOS Banner */
+.lnXdpd, .k1zIA > svg, .k1zIA > img {
+  display: none !important;
+}
+
+.k1zIA::after {
+  content: "\f313  nix-search";
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+  font-size: 38px !important;
+  font-weight: 700 !important;
+  color: var(--ctp-blue) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 30px;
+  padding-bottom: 10px;
+  letter-spacing: -1px;
+}
+
+/* Search Input Box (TUI Prompt Style) */
+.RNNXgb {
+  background-color: var(--ctp-mantle) !important;
+  border: 1px solid var(--ctp-blue) !important;
+  border-radius: 0px !important;
+  box-shadow: none !important;
+}
+
+.RNNXgb:hover, .RNNXgb:focus-within {
+  border-color: var(--ctp-mauve) !important;
+  background-color: var(--ctp-crust) !important;
+}
+
+/* Simple NixOS Prompt inside Search Bar */
+.RNNXgb::before {
+  content: "\f313  ❯";
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+  color: var(--ctp-blue) !important;
+  font-size: 15px !important;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  padding-right: 6px;
+}
+
+textarea[name="q"], input[name="q"], .gLFyf {
+  color: var(--ctp-text) !important;
+  caret-color: var(--ctp-mauve) !important;
+}
+
+/* Homepage Search Buttons */
+.FPdoLc input[type="submit"], .aajZCb input[type="submit"] {
+  background-color: var(--ctp-surface0) !important;
+  color: var(--ctp-text) !important;
+  border: 1px solid var(--ctp-surface1) !important;
+  border-radius: 0px !important;
+}
+
+.FPdoLc input[type="submit"]:hover, .aajZCb input[type="submit"]:hover {
+  border-color: var(--ctp-blue) !important;
+  color: var(--ctp-blue) !important;
+}
+
+/* Search Autocomplete Dropdown */
+.aajZCb, .OBMEnb, .erkvQe {
+  background-color: var(--ctp-mantle) !important;
+  border: 1px solid var(--ctp-surface1) !important;
+  border-radius: 0px !important;
+  box-shadow: none !important;
+}
+
+.sbhl {
+  background-color: var(--ctp-surface0) !important;
+}
+
+/* Result Titles, Links & Snippets */
+a h3, .LC20lb {
+  color: var(--ctp-blue) !important;
+  font-weight: 700 !important;
+}
+
+a:visited h3, a:visited .LC20lb {
+  color: var(--ctp-mauve) !important;
+}
+
+a h3:hover, .LC20lb:hover {
+  color: var(--ctp-sapphire) !important;
+  text-decoration: underline !important;
+}
+
+.VwiC3b, .yXK7lf, .MUxGbd, span, p, div {
+  color: var(--ctp-text);
+}
+
+cite, .tjvcx, .ylgVCe, .qLRx3b {
+  color: var(--ctp-subtext0) !important;
+}
+
+/* AI Overview / Featured Snippets / Knowledge Panels */
+.MjjYud, .g, .kp-blk, .osrp-blk, .hlcw0c, .xpdopen, .cUnQKe {
+  background-color: var(--ctp-base) !important;
+  border-radius: 0px !important;
+}
+
+/* Highlighted AI Summary Text */
+mark, .QVRyze {
+  background-color: var(--ctp-surface0) !important;
+  color: var(--ctp-peach) !important;
+}
+
+/* Navigation Tabs (All, Images, Videos, etc.) */
+.YmvwI, .hdtb-mitem a {
+  color: var(--ctp-subtext0) !important;
+}
+
+.YmvwI[aria-current="page"], .hdtb-mitem.hdtb-msel {
+  color: var(--ctp-blue) !important;
+  border-bottom: 2px solid var(--ctp-blue) !important;
+}
+
+/* Custom Catppuccin Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ctp-crust);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ctp-surface1);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ctp-blue);
+}
