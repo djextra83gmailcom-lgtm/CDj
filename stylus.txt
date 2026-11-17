@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Google Search - Catppuccin Mocha (NixOS Rice)
 @namespace      ://github.com
-@version        1.1.0
+@version        1.2.0
 @description    Catppuccin Mocha TUI theme with Nerd Fonts and NixOS prompt for Google Search
 ==/UserStyle== */
 
@@ -20,31 +20,45 @@
   --ctp-lavender: #b4befe;
   --ctp-green: #a6e3a1;
   --ctp-peach: #fab387;
+  color-scheme: dark !important;
 }
 
-/* Global Nerd Font (preserves Google's built-in Material Icons) */
-*:not([class*="material-icons"]):not([class*="google-symbols"]):not(svg):not(path) {
+/* Global Nerd Font (preserves Google/Material icon fonts & ligatures) */
+*:not([class*="material-icons"]):not([class*="material-symbols"]):not([class*="google-symbols"]):not(mat-icon):not(svg):not(path) {
   font-family: "JetBrainsMono Nerd Font", monospace !important;
 }
 
 /* Main Backgrounds */
-html, body, #main, #cnt, #rcnt, #center_col, #rhs, .sfbg, .minidiv .sfbg, .appbar, #hdtb, .T3F3Ge {
+html, body, #main, #cnt, #rcnt, #center_col, #rhs, .sfbg, .minidiv .sfbg, .appbar, #hdtb, .T3F3Ge, .L3eUgb, .o3j99 {
   background-color: var(--ctp-base) !important;
   color: var(--ctp-text) !important;
 }
 
-/* Top Bar & Footer */
-#searchform, .CvDJxb, #fbar, .fbar, .c93Gbe {
+/* Top Bar, Header Links & Bottom Footer (Fixes White Footer & Dark Gmail/Images Text) */
+#searchform, .CvDJxb, #fbar, .fbar, .c93Gbe, .uU7dJb, .KxwPGc, .qarstb {
   background-color: var(--ctp-mantle) !important;
   border-color: var(--ctp-surface0) !important;
+  color: var(--ctp-subtext0) !important;
+}
+
+.uU7dJb {
+  border-bottom: 1px solid var(--ctp-surface0) !important;
+}
+
+.gb_X, .gb_Z, a.gb_W, a.pHiOh, .KxwPGc a {
+  color: var(--ctp-subtext0) !important;
+}
+
+.gb_X:hover, .gb_Z:hover, a.gb_W:hover, a.pHiOh:hover, .KxwPGc a:hover {
+  color: var(--ctp-blue) !important;
 }
 
 /* Replace Homepage Google Logo with Minimal NixOS Banner */
-.lnXdpd, .k1zIA > svg, .k1zIA > img {
+.lnXdpd, .k1zIA > svg, .k1zIA > img, .LLD4me svg {
   display: none !important;
 }
 
-.k1zIA::after {
+.k1zIA::after, .LLD4me::after {
   content: "\f313  nix-search";
   font-family: "JetBrainsMono Nerd Font", monospace !important;
   font-size: 38px !important;
@@ -86,6 +100,19 @@ html, body, #main, #cnt, #rcnt, #center_col, #rhs, .sfbg, .minidiv .sfbg, .appba
 textarea[name="q"], input[name="q"], .gLFyf {
   color: var(--ctp-text) !important;
   caret-color: var(--ctp-mauve) !important;
+}
+
+/* Fix White "Modul AI" Pill Button inside Search Bar */
+.plR5qb, .nQcZff, [aria-label="Modul AI"], [aria-label="AI Mode"] {
+  background-color: var(--ctp-surface0) !important;
+  color: var(--ctp-text) !important;
+  border: 1px solid var(--ctp-surface1) !important;
+  border-radius: 0px !important;
+}
+
+.plR5qb:hover, .nQcZff:hover {
+  border-color: var(--ctp-mauve) !important;
+  color: var(--ctp-mauve) !important;
 }
 
 /* Homepage Search Buttons */
